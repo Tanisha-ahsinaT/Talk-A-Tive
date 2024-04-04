@@ -5,19 +5,19 @@ const generateToken = require("../config/generateToken");
 //@description     Get or Search all users
 //@route           GET /api/user?search=
 //@access          Public
- const allUsers = asyncHandler(async (req, res) => {
-   const keyword = req.query.search
-     ? {
-         $or: [
-           { name: { $regex: req.query.search, $options: "i" } },
-           { email: { $regex: req.query.search, $options: "i" } },
-         ],
-       }
-     : {};
+const allUsers = asyncHandler(async (req, res) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
 
-   const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
-   res.send(users);
- });
+  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+  res.send(users);
+});
 
 //@description     Register new user
 //@route           POST /api/user/
@@ -62,7 +62,7 @@ const registerUser = asyncHandler(async (req, res) => {
 //@description     Auth the user
 //@route           POST /api/users/login
 //@access          Public
-  const authUser = asyncHandler(async (req, res) => {
+const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
@@ -80,6 +80,6 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("Invalid Email or Password");
   }
-   });
+});
 
-module.exports = {registerUser, authUser};
+module.exports = { allUsers, registerUser, authUser };
